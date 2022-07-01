@@ -43,7 +43,6 @@ def LINMAP(CSVArr, IdealPoints):
 #TOPSIS Function
 def TOPSIS(CSVArr, IdealPoints, nonIdealPoints):
     normalizedArr = copy.deepcopy(CSVArr)
-    IdealPoints = normalizeIdeal(IdealPoints, normalizedArr)
     nonIdealPoints = normalizeIdeal(nonIdealPoints, normalizedArr)
     normalize(normalizedArr)
     dplus = distance(normalizedArr, IdealPoints)
