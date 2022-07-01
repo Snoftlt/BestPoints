@@ -29,7 +29,7 @@ def distance(normalizedArr, normalUnnormalIdeal):
     return distance
 def normalizeIdeal(Ideal, unnormalizedArr):
     for i in range(len(Ideal)):
-        Ideal[i] = (Ideal[i]/powerSigma(unnoramlizedArr)[i])
+        Ideal[i] = (Ideal[i]/powerSigma(unnormalizedArr)[i])
     return Ideal
 #LINMAP Function
 def LINMAP(CSVArr, IdealPoints):
@@ -37,16 +37,34 @@ def LINMAP(CSVArr, IdealPoints):
     IdealPoints = normalizeIdeal(IdealPoints, normalizedArr)
     normalize(normalizedArr)
     dplus = distance(normalizedArr, IdealPoints)
-    print("LINMAP Point index is {i}".format(i = dplus.index(min(dplus))))
+    print("LINMAP Point index is {i}".format(i = (dplus.index(min(dplus))+1)))
     print("LINMAP Point is {i}".format(i = CSVArr[dplus.index(min(dplus))]))
+
+#TOPSIS Function
+def TOPSIS(CSVArr, IdealPoints, nonIdealPoints):
+    normalizedArr = copy.deepcopy(CSVArr)
+    IdealPoints = normalizeIdeal(IdealPoints, normalizedArr)
+    nonIdealPoints = normalizeIdeal(nonIdealPoints, normalizedArr)
+    normalize(normalizedArr)
+    dplus = distance(normalizedArr, IdealPoints)
+    dminus = distance(normalizedArr, nonIdealPoints)
+    CI = []
+    for i in range(len(dplus)):
+        CI.append((dminus[i]/(dplus[i]+dminus[i])))
+    print("TOPSIS Point index is {i}".format(i = (CI.index(max(CI))+1)))
+    print("TOPSIS Point is {i}".format(i = CSVArr[CI.index(max(CI))]))
 
 
 print("Enter Path of CSV file:")
 path = input()
 print("Enter Ideal Point:")
-IdealPoints = float(input())
+IdealPoints = input().split()
+for i in range(len(IdealPoints)):
+    IdealPoints[i] = float(IdealPoints[i])
 print("Enter nonIdeal Point:")
-nonIdealPoints = float(input())
+nonIdealPoints = input().split()
+for i in range(len(nonIdealPoints)):
+    nonIdealPoints[i] = float(nonIdealPoints[i])
 
 CSVFile = []
 with open(path, "r") as f:
@@ -54,4 +72,4 @@ with open(path, "r") as f:
         CSVFile.append(i.replace(",", " ").split())
     floatArray(CSVFile)
 LINMAP(CSVFile, IdealPoints)
-
+TOPSIS(CSVFile, IdealPoints, nonIdealPoints)
